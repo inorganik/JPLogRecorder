@@ -19,11 +19,12 @@ Your Xcode console will show:
 
 The log, retrieved with `[JPLogRecorder logArrayAsString]` will show:
 ```
-[2/15/16 1:11:24 PM] <FeedViewController.m:46> retrieved feed. number of items: 26
+[2/15/16 1:11:42 PM] <FeedViewController.m:46> retrieved feed. number of items: 26
 ```
 
 ### Get the log
 
+`[JPLogRecorder logArray]` returns an array of log statements in reverse chronological order (newest first).
 `[JPLogRecorder logArrayAsString]` returns a string of the log. 
 
 ### Persistently recorded logs
