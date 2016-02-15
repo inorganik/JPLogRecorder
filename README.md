@@ -22,6 +22,10 @@ The log, retrieved with `[JPLogRecorder logArrayAsString]` will show:
 [2/15/16 1:11:24 PM] <FeedViewController.m:46> retrieved feed. number of items: 26
 ```
 
+### Get the log
+
+`[JPLogRecorder logArrayAsString]` returns a string of the log. 
+
 ### Persistently recorded logs
 Optionally, you can make the retained log statements persistent. This means that even if your app crashes or is force quit by the user, log statements _before the crash_ are retained. All you need is **this one weird trick** in AppDelegate.m:
 ```objc
