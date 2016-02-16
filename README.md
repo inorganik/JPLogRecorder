@@ -1,5 +1,5 @@
 # JPLogRecorder
-A replacement for NSLog() that records your logs so you can retrieve them at runtime. You can optionally [make it persistent](#persistence), so that log statements from _before a crash_ can be reported.
+For iOS development - a replacement for NSLog() that records your logs so you can retrieve them at runtime. You can optionally [make it persistent](#persistence), so that log statements from _before a crash_ can be reported.
 
 ### Usage
 
@@ -49,3 +49,6 @@ The number of retained log statements is capped at 50 -- this prevents the recor
 
 ### Enable Production logging
 Say you're about to drop a release to TestFlight, but you want logging kept on so your users can use a function in your app that sends you the log when an error occurs. No problem, just call `[JPLogRecorder setShouldLogInProduction:YES]`. The default behavior for prod is that logging is disabled.
+
+### Javascript? 
+If you are looking for a javascript equivalent to this logging class, check out [debugout](https://github.com/inorganik/debugout.js).
