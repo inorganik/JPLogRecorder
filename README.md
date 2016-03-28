@@ -1,5 +1,5 @@
 # JPLogRecorder
-For iOS development - a replacement for NSLog() that records your logs so you can retrieve them at runtime. You can optionally [make it persistent](#persistence), so that log statements from _before a crash_ can be reported.
+For iOS development - a replacement for NSLog() that persistently records your logs so that they remain intact post-crash, continuous across sessions, and retrievable.
 
 ### Usage
 
@@ -25,24 +25,8 @@ The log, retrieved with `[JPLogRecorder logArrayAsString]` will show:
 ### Get the log
 
 `[JPLogRecorder logArray]` returns an array of log statements in reverse chronological order (newest first).
-`[JPLogRecorder logArrayAsString]` returns a string of the entire log. 
+`[JPLogRecorder logArrayAsString]` returns a string of the entire log with `\n\n` separating log statements. 
 
-### Persistently recorded logs <a name="persistence"></a>
-Optionally, you can make the retained log statements persistent. This means that even if your app crashes or is force quit by the user, log statements _before the crash_ are retained. All you need is **this one weird trick** in AppDelegate.m:
-```objc
-- (void)applicationWillTerminate:(UIApplication *)application
-{
-  [JPLogRecorder saveLogArray];
-}
-```
-If you have background-tasks enabled in your app, also save the log here:
-```objc
-- (void)applicationDidEnterBackground:(UIApplication *)application
-{
-  [JPLogRecorder saveLogArray];
-}
-```
-When the app re-launches, the log array will initialize with the saved log array.
 
 ### The recorded log is capped
 The number of retained log statements is capped at 50 -- this prevents the recorded log eating up potentially endless memory. You can change this by editing the static property in JPLogRecorder.m, or by calling [JPLogRecorder setMaxLogsRetained:100];

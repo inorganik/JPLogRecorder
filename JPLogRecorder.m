@@ -7,8 +7,9 @@
 
 #import "JPLogRecorder.h"
 
-static BOOL JPLogger_shouldLogInProduction = NO;
-static NSInteger JPLogger_maxLogsRetained = 50;
+static BOOL JPLogRecorder_shouldLogInProduction = NO;
+static NSInteger JPLogRecorder_maxLogsRetained = 50;
+NSTimer *JPLogRecorder_saveLogTimer;
 
 @implementation JPLogRecorder
 
@@ -34,9 +35,13 @@ static NSInteger JPLogger_maxLogsRetained = 50;
         [logArray insertObject:retainedLogStatement atIndex:0];
         
         // pop excess logs
-        if ([logArray count] > JPLogger_maxLogsRetained) {
-            logArray = [[logArray subarrayWithRange:NSMakeRange(0, JPLogger_maxLogsRetained)] mutableCopy];
+        if ([logArray count] > JPLogRecorder_maxLogsRetained) {
+            logArray = [[logArray subarrayWithRange:NSMakeRange(0, JPLogRecorder_maxLogsRetained)] mutableCopy];
         }
+        
+        // debounce saving log
+        [JPLogRecorder_saveLogTimer invalidate];
+        JPLogRecorder_saveLogTimer = [NSTimer scheduledTimerWithTimeInterval:0.05 target:self selector:@selector(saveLogArray) userInfo:nil repeats:NO];
     }
 }
 
@@ -66,7 +71,7 @@ static NSInteger JPLogger_maxLogsRetained = 50;
 + (NSString *) logArrayFilepath {
     NSArray *folders = [[NSFileManager defaultManager] URLsForDirectory:NSLibraryDirectory inDomains:NSUserDomainMask];
     NSURL *libraryDir = [folders objectAtIndex:0];
-    return [libraryDir.path stringByAppendingPathComponent:@"JPLogger_log.txt"];
+    return [libraryDir.path stringByAppendingPathComponent:@"JPLogRecorder_log.txt"];
 }
 
 + (NSString *) logArrayAsString {
@@ -75,21 +80,21 @@ static NSInteger JPLogger_maxLogsRetained = 50;
 }
 
 + (void) setMaxLogsRetained:(NSInteger)maxLogs {
-    JPLogger_maxLogsRetained = maxLogs;
+    JPLogRecorder_maxLogsRetained = maxLogs;
 }
 
 #pragma mark - Flags
 
 + (BOOL) shouldLogInProduction {
-    return JPLogger_shouldLogInProduction;
+    return JPLogRecorder_shouldLogInProduction;
 }
 
 + (void) setShouldLogInProduction:(BOOL)prodLogOn {
-    JPLogger_shouldLogInProduction = prodLogOn;
+    JPLogRecorder_shouldLogInProduction = prodLogOn;
 }
 
 + (BOOL) isLoggingEnabled {
-    return ([self isProduction]) ? JPLogger_shouldLogInProduction : YES;
+    return ([self isProduction]) ? JPLogRecorder_shouldLogInProduction : YES;
 }
 
 + (BOOL) isProduction {
